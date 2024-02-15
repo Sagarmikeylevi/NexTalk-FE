@@ -1,6 +1,5 @@
 import { QueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import { FaGrinTongueWink } from "react-icons/fa";
 
 export const queryClient = new QueryClient();
 
@@ -21,6 +20,7 @@ export const loginUser = async (loginData) => {
     const token = response.data.data.token;
 
     localStorage.setItem("token", token);
+
     const expiration = new Date();
     expiration.setHours(expiration.getHours() + 1);
     localStorage.setItem("expiration", expiration.toISOString());

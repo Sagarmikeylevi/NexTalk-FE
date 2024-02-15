@@ -1,10 +1,29 @@
+import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
-import { Link, Form } from "react-router-dom";
+import { Link, Form, useNavigate } from "react-router-dom";
+import { loginUser } from "../http";
+import Error from "./UI/showError";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const navigate = useNavigate();
+
+  const { mutate, isPending, isError, error } = useMutation({
+    mutationFn: ({ loginData }) => loginUser(loginData),
+    onSuccess: () => {
+      navigate("/");
+    },
+  });
+
+  const loginHandler = (event) => {
+    event.preventDefault();
+    mutate({ loginData: { email, password } });
+  };
+
+  if (isError) {
+    return <Error message={error.response.data.error} />;
+  }
 
   const formLabelStyle = "font-semibold text-[#0000337a]";
   const formInputStyle =
@@ -29,7 +48,11 @@ const Login = () => {
           </p>
         </div>
 
-        <Form method="POST" className="mt-[-1rem] flex flex-col gap-2 w-[80%]">
+        <Form
+          onSubmit={loginHandler}
+          method="POST"
+          className="mt-[-1rem] flex flex-col gap-2 w-[80%]"
+        >
           <div className="flex flex-col">
             <label htmlFor="email" className={formLabelStyle}>
               Email<span className="text-[#6A4DFF]">*</span>
@@ -70,16 +93,16 @@ const Login = () => {
 
           <button
             className={`mt-4 w-[100%] h-[2.5rem]  ${
-              isSubmitting ? "bg-[#6A4DFF]" : "bg-[#000033]"
-            } text-white rounded mt-2 hover:bg-teal-400 transition duration-300 ease-in-out ${
+              isPending ? "bg-[#6A4DFF]" : "bg-[#000033]"
+            } text-white rounded mt-2 hover:bg-[#6A4DFF] transition duration-300 ease-in-out ${
               email.trim().length === 0 || password.trim().length === 0
                 ? `pointer-events-none`
                 : ""
             }`}
             type="submit"
-            disabled={isSubmitting}
+            disabled={isPending}
           >
-            {isSubmitting ? "Loging in..." : "Log in"}
+            {isPending ? "Loging in..." : "Log in"}
           </button>
         </Form>
         <p className="text-sm tracking-wider text-[#0000337a]">

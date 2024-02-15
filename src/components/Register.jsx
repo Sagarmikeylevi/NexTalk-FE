@@ -1,12 +1,29 @@
+import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
-import { Link, Form, useNavigation } from "react-router-dom";
+import { Link, Form, useNavigate } from "react-router-dom";
+import { registerUser } from "../http";
+import Error from "./UI/showError";
 const Register = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
-  const navigation = useNavigation();
-  const isSubmitting = navigation.state === "submitting";
+  const { mutate, isPending, isError, error } = useMutation({
+    mutationFn: ({ userData }) => registerUser(userData),
+    onSuccess: () => {
+      navigate("/login");
+    },
+  });
+
+  const userRegistationHandler = (event) => {
+    event.preventDefault();
+    mutate({ userData: { name, email, password } });
+  };
+
+  if (isError) {
+    return <Error message={error.response.data.error} />;
+  }
 
   const formLabelStyle = "font-semibold text-[#0000337a]";
   const formInputStyle =
@@ -14,9 +31,9 @@ const Register = () => {
 
   return (
     <div className="h-auto mt-8 w-full grid place-content-center mb-8">
-      <div className="w-[28rem] h-[32rem] rounded flex flex-col items-center justify-between pt-8 pb-4 bg-white shadow-sm">
+      <div className="w-[28rem] h-[32rem] rounded flex flex-col items-center justify-between pt-8 pb-4 bg-white shadow-md">
         <div className="w-[90%] grid  place-content-center gap-2">
-          <div className="flex flex-row space-x-1 pl-5">
+          <div className="flex flex-row space-x-1 pl-6">
             <img
               className="w-8 h-8"
               src="https://cdn-icons-png.flaticon.com/128/14099/14099305.png"
@@ -32,7 +49,11 @@ const Register = () => {
           </p>
         </div>
 
-        <Form method="POST" className="flex flex-col gap-2 mt-[-1rem]">
+        <Form
+          onSubmit={userRegistationHandler}
+          method="POST"
+          className="flex flex-col gap-2 mt-[-1rem]"
+        >
           <div className="flex flex-col">
             <label htmlFor="name" className={formLabelStyle}>
               Name <span className="text-[#6A4DFF]">*</span>
@@ -92,8 +113,8 @@ const Register = () => {
 
           <button
             className={`mt-4 w-[18rem] h-[2.5rem] ${
-              isSubmitting ? "bg-[#6A4DFF]" : "bg-[#000033]"
-            } text-white rounded mt-2 hover:bg-teal-400 transition duration-300 ease-in-out ${
+              isPending ? "bg-[#6A4DFF]" : "bg-[#000033]"
+            } text-white rounded mt-2 hover:bg-[#6A4DFF] transition duration-300 ease-in-out ${
               name.trim().length === 0 ||
               email.trim().length === 0 ||
               email.indexOf("@") === -1 ||
@@ -102,9 +123,9 @@ const Register = () => {
                 : ""
             }`}
             type="submit"
-            disabled={isSubmitting}
+            disabled={isPending}
           >
-            {isSubmitting ? "Signing up..." : "Sign Up"}
+            {isPending ? "Signing up..." : "Sign Up"}
           </button>
         </Form>
         <p className="text-sm tracking-wider text-[#0000337a]">

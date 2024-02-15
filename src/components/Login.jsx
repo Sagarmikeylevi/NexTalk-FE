@@ -11,7 +11,7 @@ const Login = () => {
     "mt-2 pl-4 w-[100%] text-[#0000337a] h-[2.5rem] rounded border-[1px] bg-transparent outline-none";
   return (
     <div className="h-auto mt-8 w-full grid place-content-center mb-8">
-      <div className="w-[80vw] max-w-[28rem] h-[26rem] rounded flex flex-col items-center justify-center pt-8 pb-4 gap-8 bg-white shadow-sm">
+      <div className="w-[80vw] max-w-[28rem] h-[26rem] rounded flex flex-col items-center justify-center pt-8 pb-4 gap-8 bg-white shadow-md">
         <div className="w-[90%] grid  place-content-center gap-2">
           <div className="flex flex-row space-x-2">
             <h1 className="text-3xl font-bold tracking-wide text-[#000033] pl-8">

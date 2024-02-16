@@ -1,29 +1,34 @@
 import { createContext, useContext, useState } from "react";
-import { getAuthToken, getUsername } from "../auth";
+import { getAuthToken, getAvatar, getUsername } from "../auth";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const getToken = getAuthToken();
-  const getUser = getUsername();
-  const [user, setUser] = useState(getUser || null);
-  const [token, setToken] = useState(getToken || null);
+  const authToken = getAuthToken();
+  const username = getUsername();
+  const userAvatar = getAvatar();
 
-  const login = (userData, authToken) => {
+  const [avatar, setAvatar] = useState(userAvatar || null);
+  const [user, setUser] = useState(username || null);
+  const [token, setToken] = useState(authToken || null);
+
+  const login = (userData, avatar, authToken) => {
     setUser(userData);
+    setAvatar(avatar);
     setToken(authToken);
   };
 
   const logout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("username");
+    localStorage.removeItem("avatar");
     localStorage.removeItem("expiration");
     setUser(null);
     setToken(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, login, logout }}>
+    <AuthContext.Provider value={{ user, avatar, token, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

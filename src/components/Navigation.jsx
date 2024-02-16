@@ -3,7 +3,7 @@ import { useAuth } from "../context/AuthContext";
 
 const Navigation = () => {
   const location = useLocation();
-  const { user, logout } = useAuth();
+  const { user, avatar, logout } = useAuth();
 
   const renderNavData = () => {
     if (location.pathname === "/login" || location.pathname === "/register") {
@@ -17,10 +17,11 @@ const Navigation = () => {
 
           <Link
             to="/login"
-            className="text-sm px-4 py-2 rounded-md bg-[#353535] text-[#FFFFFF] md:text-base lg:text-lg hover:bg-[#353535]"
+            className="text-sm px-4 py-2 rounded-md bg-[#353535] text-[#FFFFFF] md:text-base lg:text-lg hover:bg-[#353535] flex flex-row space-x-2 items-center"
             onClick={() => logout()}
           >
-            {user}
+            <img src={avatar} alt="avatar" className="h-6 w-6" />
+            <p>{user}</p>
           </Link>
         </div>
       );

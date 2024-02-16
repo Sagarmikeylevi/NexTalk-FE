@@ -30,6 +30,12 @@ export const getUsername = () => {
   return username;
 };
 
+export const getAvatar = () => {
+  const avatar = localStorage.getItem("avatar");
+
+  return avatar;
+};
+
 export const checkAuthLoader = () => {
   const token = getAuthToken();
 

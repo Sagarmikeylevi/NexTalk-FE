@@ -14,7 +14,7 @@ const Login = () => {
   const { mutate, isPending, isError, error } = useMutation({
     mutationFn: ({ loginData }) => loginUser(loginData),
     onSuccess: (data) => {
-      login(data.username, data.token);
+      login(data.user.username, data.user.avatar, data.token);
       navigate("/");
     },
   });

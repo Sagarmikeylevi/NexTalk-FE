@@ -18,10 +18,11 @@ export const loginUser = async (loginData) => {
     const response = await axios.post(`${apiURL}/api/user/login`, loginData);
 
     const token = response.data.data.token;
-    const username = response.data.data.username;
+    const user = response.data.data.user;
 
     localStorage.setItem("token", token);
-    localStorage.setItem("username", username);
+    localStorage.setItem("username", user.username);
+    localStorage.setItem("avatar", user.avatar);
 
     const expiration = new Date();
     expiration.setHours(expiration.getHours() + 1);
@@ -29,7 +30,7 @@ export const loginUser = async (loginData) => {
 
     return {
       token,
-      username,
+      user,
     };
   } catch (error) {
     throw error;

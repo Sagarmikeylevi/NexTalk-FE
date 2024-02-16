@@ -1,7 +1,9 @@
 import { Link, useLocation } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const Navigation = () => {
   const location = useLocation();
+  const { user, logout } = useAuth();
 
   const renderNavData = () => {
     if (location.pathname === "/login" || location.pathname === "/register") {
@@ -16,8 +18,9 @@ const Navigation = () => {
           <Link
             to="/login"
             className="text-sm px-4 py-2 rounded-md bg-[#353535] text-[#FFFFFF] md:text-base lg:text-lg hover:bg-[#353535]"
+            onClick={() => logout()}
           >
-            Sign In
+            {user}
           </Link>
         </div>
       );

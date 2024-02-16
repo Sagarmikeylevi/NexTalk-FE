@@ -1,3 +1,5 @@
+import { redirect } from "react-router-dom";
+
 export const getTokenDuration = () => {
   const storedExpirationDate = localStorage.getItem("expiration");
   const expirationDate = new Date(storedExpirationDate);
@@ -20,4 +22,19 @@ export const getAuthToken = () => {
     return "EXPIRED";
   }
   return token;
+};
+
+export const getUsername = () => {
+  const username = localStorage.getItem("username");
+
+  return username;
+};
+
+export const checkAuthLoader = () => {
+  const token = getAuthToken();
+
+  if (!token) {
+    return redirect("/login");
+  }
+  return null;
 };

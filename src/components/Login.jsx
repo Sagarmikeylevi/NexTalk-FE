@@ -3,15 +3,18 @@ import { useState } from "react";
 import { Link, Form, useNavigate } from "react-router-dom";
 import { loginUser } from "../http";
 import Error from "./UI/showError";
+import { useAuth } from "../context/AuthContext";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const { mutate, isPending, isError, error } = useMutation({
     mutationFn: ({ loginData }) => loginUser(loginData),
-    onSuccess: () => {
+    onSuccess: (data) => {
+      login(data.username, data.token);
       navigate("/");
     },
   });

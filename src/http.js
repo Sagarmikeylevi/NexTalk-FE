@@ -55,3 +55,42 @@ export const getAllMembers = async (userId) => {
     throw error;
   }
 };
+
+export const createChat = async (firstPerson, secondPerson) => {
+  try {
+    const response = await axios.post(`${apiURL}/api/chat/`, {
+      firstPerson,
+      secondPerson,
+    });
+
+    return response.data._id;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getMessages = async (chatId) => {
+  try {
+    const response = await axios.get(`${apiURL}/api/message/${chatId}`);
+
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const sendChat = async (chatId, senderId, text) => {
+  try {
+    const response = await axios.post(`${apiURL}/api/message/`, {
+      chatId,
+      senderId,
+      text,
+    });
+
+    console.log(response);
+
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

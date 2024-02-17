@@ -1,7 +1,40 @@
-import { useState } from "react";
+import { useChatAppContext } from "../context/ChatAppContext";
+import { useMutation } from "@tanstack/react-query";
+import { createChat } from "../http";
+import Loader from "./UI/loader";
+import Error from "./UI/showError";
+import MessageBox from "./MessageBox";
 
 const ChatUI = ({ members }) => {
-  const [showSidebar, setShowSidebar] = useState(true);
+  const {
+    showSidebar,
+    updateSideBar,
+    userId: firstPerson,
+    updateSecondPerson,
+    updateActiveChatId,
+  } = useChatAppContext();
+
+  const { mutate, isPending, isError, error } = useMutation({
+    mutationFn: ({ firstPerson, secondPerson }) =>
+      createChat(firstPerson, secondPerson),
+    onSuccess: (chatId) => {
+      updateActiveChatId(chatId);
+    },
+  });
+
+  const chatHandler = (secondPerson, username) => {
+    mutate({ firstPerson, secondPerson });
+    updateSecondPerson({ id: secondPerson, name: username });
+  };
+
+  if (isPending) {
+    return <Loader message="Setting Up Your Chat..." />;
+  }
+
+  if (isError) {
+    console.log(error);
+    return <Error message="Oops, something went wrong setting up your chat" />;
+  }
 
   return (
     <div className="w-[98vw] ml-[1vw] h-[84%] mt-[2vh] absolute left-0 top-[12%] rounded-md bg-[#FFFFFF] shadow-md">
@@ -24,7 +57,7 @@ const ChatUI = ({ members }) => {
               src="https://cdn-icons-png.flaticon.com/128/6130/6130456.png"
               alt="awipe-left"
               className="h-10 w-10 absolute right-2 top-[50%] translate-y-[-50%] cursor-pointer"
-              onClick={() => setShowSidebar(false)}
+              onClick={() => updateSideBar()}
             />
           </div>
           <div className="w-full h-[80%] rounded-l-md overflow-hidden hover:overflow-y-auto scrollbar-thin scrollbar-thumb-[#0000337a] scrollbar-track-transparent transition-all duration-300">
@@ -32,6 +65,7 @@ const ChatUI = ({ members }) => {
               <div
                 className="w-full h-[25%]  relative hover:bg-[#f2f2f2] ease-in-out duration-200"
                 key={member.id}
+                onClick={() => chatHandler(member.id, member.username)}
               >
                 <div className="absolute left-4 top-[50%] translate-y-[-50%] flex flex-row space-x-4">
                   <img
@@ -66,63 +100,12 @@ const ChatUI = ({ members }) => {
             src="https://cdn-icons-png.flaticon.com/128/6130/6130466.png"
             alt="awipe-right"
             className="h-10 w-10 absolute left-[50%] top-[50%] translate-y-[-50%] translate-x-[-50%] cursor-pointer"
-            onClick={() => setShowSidebar(true)}
+            onClick={() => updateSideBar()}
           />
         </div>
       )}
 
-      <div
-        className={`h-full rounded-r-md absolute right-0 ${
-          showSidebar ? "w-[90%] md:w-[60%] lg:w-[65%]" : "w-[90%] md:w-[95%]"
-        }`}
-      >
-        <h1 className="text-lg font-bold text-[#0000337a] absolute left-[50%] translate-x-[-50%] top-2 tracking-wide">
-          Ronald Richards
-        </h1>
-
-        <div className="absolute w-[90%] h-[70%] top-[10%] left-[50%] translate-x-[-50%] py-4">
-          <div className="flex justify-start">
-            <span className="px-4 py-2 bg-[#f2f2f2] w-auto rounded-md">
-              Hello
-            </span>
-          </div>
-
-          <div className="flex justify-end">
-            <span className="px-4 py-2 bg-[#6A4DFF] text-[#FFFFFF] rounded-md">
-              How are you?
-            </span>
-          </div>
-        </div>
-
-        <div className="h-[15%] w-full bg-[#e6e6e6] absolute bottom-0 rounded-br-md">
-          <div className="absolute left-4 top-[50%] translate-y-[-50%] w-[70%] flex flex-row space-x-4 items-center">
-            <img
-              src="https://cdn-icons-png.flaticon.com/128/10015/10015412.png"
-              alt="message"
-              className="w-8 h-8 opacity-40"
-            />
-            <input
-              type="text"
-              placeholder="Type here"
-              className="w-full h-full bg-transparent outline-none text-lg text-thin text-[#0000337a]"
-            />
-          </div>
-
-          <div className="absolute right-4 top-[50%] translate-y-[-50%] flex flex-row space-x-4 items-center">
-            <img
-              src="https://cdn-icons-png.flaticon.com/128/1023/1023656.png"
-              alt="emoji"
-              className="w-8 h-8 opacity-40 cursor-pointer"
-            />
-
-            <img
-              src="https://cdn-icons-png.flaticon.com/128/13734/13734068.png"
-              alt="submit"
-              className="w-8 h-8 cursor-pointer"
-            />
-          </div>
-        </div>
-      </div>
+      <MessageBox />
     </div>
   );
 };

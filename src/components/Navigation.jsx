@@ -1,9 +1,9 @@
 import { Link, useLocation } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useChatAppContext } from "../context/ChatAppContext";
 
 const Navigation = () => {
   const location = useLocation();
-  const { user, avatar, logout } = useAuth();
+  const { user, avatar, logout } = useChatAppContext();
 
   const renderNavData = () => {
     if (location.pathname === "/login" || location.pathname === "/register") {

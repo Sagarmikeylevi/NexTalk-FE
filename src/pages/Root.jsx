@@ -1,11 +1,11 @@
 import { Outlet } from "react-router-dom";
 import Navigation from "../components/Navigation";
-import { useAuth } from "../context/AuthContext";
+import { useChatAppContext } from "../context/ChatAppContext";
 import { useEffect } from "react";
 import { getTokenDuration } from "../auth";
 
 export default function RootPage() {
-  const { token, logout } = useAuth();
+  const { token, logout } = useChatAppContext();
 
   useEffect(() => {
     let logoutTimer;

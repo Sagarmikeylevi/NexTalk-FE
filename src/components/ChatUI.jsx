@@ -1,7 +1,8 @@
 import { useState } from "react";
 
-const ChatUI = () => {
-  const [showSidebar, setShowSidebar] = useState(false);
+const ChatUI = ({ members }) => {
+  const [showSidebar, setShowSidebar] = useState(true);
+
   return (
     <div className="w-[98vw] ml-[1vw] h-[84%] mt-[2vh] absolute left-0 top-[12%] rounded-md bg-[#FFFFFF] shadow-md">
       {showSidebar && (
@@ -27,122 +28,34 @@ const ChatUI = () => {
             />
           </div>
           <div className="w-full h-[80%] rounded-l-md overflow-hidden hover:overflow-y-auto scrollbar-thin scrollbar-thumb-[#0000337a] scrollbar-track-transparent transition-all duration-300">
-            {/* person1 */}
-            <div className="w-full h-[25%]  relative hover:bg-[#f2f2f2] ease-in-out duration-200">
-              <div className="absolute left-4 top-[50%] translate-y-[-50%] flex flex-row space-x-4">
-                <img
-                  src="https://cdn-icons-png.flaticon.com/128/1326/1326377.png"
-                  alt="avatar"
-                  className="h-14 w-14 "
-                />
-                <div className="flex flex-col">
-                  <h2 className="text-lg font-bold text-[#353535]">
-                    Ronald Richards
-                  </h2>
-                  <p className="text-sm text-[#0000337a]">I don't like this</p>
+            {members.map((member) => (
+              <div
+                className="w-full h-[25%]  relative hover:bg-[#f2f2f2] ease-in-out duration-200"
+                key={member.id}
+              >
+                <div className="absolute left-4 top-[50%] translate-y-[-50%] flex flex-row space-x-4">
+                  <img
+                    src={member.avatar}
+                    alt="avatar"
+                    className="h-14 w-14 "
+                  />
+                  <div className="flex flex-col">
+                    <h2 className="text-lg font-bold text-[#353535]">
+                      {member.username}
+                    </h2>
+                    <p className="text-sm text-[#0000337a]">
+                      I don't like this
+                    </p>
+                  </div>
+                </div>
+
+                <div className="absolute right-4 top-[50%] translate-y-[-50%] flex flex-col items-center">
+                  <span className="px-2 py-1 bg-[#6A4DFF] rounded-md text-[#FFFFFF] text-sm">
+                    4
+                  </span>
                 </div>
               </div>
-
-              <div className="absolute right-4 top-[50%] translate-y-[-50%] flex flex-col items-center">
-                <span className="px-2 py-1 bg-[#6A4DFF] rounded-md text-[#FFFFFF] text-sm">
-                  4
-                </span>
-              </div>
-            </div>
-            {/* person1 */}
-
-            {/* person-2 */}
-            <div className="w-full h-[25%]  relative hover:bg-[#f2f2f2] ease-in-out duration-200">
-              <div className="absolute left-4 top-[50%] translate-y-[-50%] flex flex-row space-x-4">
-                <img
-                  src="https://cdn-icons-png.flaticon.com/128/1326/1326377.png"
-                  alt="avatar"
-                  className="h-14 w-14 "
-                />
-                <div className="flex flex-col">
-                  <h2 className="text-lg font-bold text-[#353535]">
-                    Ronald Richards
-                  </h2>
-                  <p className="text-sm text-[#0000337a]">I don't like this</p>
-                </div>
-              </div>
-
-              <div className="absolute right-4 top-[50%] translate-y-[-50%] flex flex-col items-center">
-                <span className="px-2 py-1 bg-[#6A4DFF] rounded-md text-[#FFFFFF] text-sm">
-                  4
-                </span>
-              </div>
-            </div>
-            {/* person-2 */}
-            {/* person-3 */}
-            <div className="w-full h-[25%]  relative hover:bg-[#f2f2f2] ease-in-out duration-200">
-              <div className="absolute left-4 top-[50%] translate-y-[-50%] flex flex-row space-x-4">
-                <img
-                  src="https://cdn-icons-png.flaticon.com/128/1326/1326377.png"
-                  alt="avatar"
-                  className="h-14 w-14 "
-                />
-                <div className="flex flex-col">
-                  <h2 className="text-lg font-bold text-[#353535]">
-                    Ronald Richards
-                  </h2>
-                  <p className="text-sm text-[#0000337a]">I don't like this</p>
-                </div>
-              </div>
-
-              <div className="absolute right-4 top-[50%] translate-y-[-50%] flex flex-col items-center">
-                <span className="px-2 py-1 bg-[#6A4DFF] rounded-md text-[#FFFFFF] text-sm">
-                  4
-                </span>
-              </div>
-            </div>
-            {/* person-3 */}
-            {/* person-4 */}
-            <div className="w-full h-[25%]  relative hover:bg-[#f2f2f2] ease-in-out duration-200">
-              <div className="absolute left-4 top-[50%] translate-y-[-50%] flex flex-row space-x-4">
-                <img
-                  src="https://cdn-icons-png.flaticon.com/128/1326/1326377.png"
-                  alt="avatar"
-                  className="h-14 w-14 "
-                />
-                <div className="flex flex-col">
-                  <h2 className="text-lg font-bold text-[#353535]">
-                    Ronald Richards
-                  </h2>
-                  <p className="text-sm text-[#0000337a]">I don't like this</p>
-                </div>
-              </div>
-
-              <div className="absolute right-4 top-[50%] translate-y-[-50%] flex flex-col items-center">
-                <span className="px-2 py-1 bg-[#6A4DFF] rounded-md text-[#FFFFFF] text-sm">
-                  4
-                </span>
-              </div>
-            </div>
-            {/* person-4 */}
-            {/* person-4 */}
-            <div className="w-full h-[25%]  relative hover:bg-[#f2f2f2] ease-in-out duration-200">
-              <div className="absolute left-4 top-[50%] translate-y-[-50%] flex flex-row space-x-4">
-                <img
-                  src="https://cdn-icons-png.flaticon.com/128/1326/1326377.png"
-                  alt="avatar"
-                  className="h-14 w-14 "
-                />
-                <div className="flex flex-col">
-                  <h2 className="text-lg font-bold text-[#353535]">
-                    Ronald Richards
-                  </h2>
-                  <p className="text-sm text-[#0000337a]">I don't like this</p>
-                </div>
-              </div>
-
-              <div className="absolute right-4 top-[50%] translate-y-[-50%] flex flex-col items-center">
-                <span className="px-2 py-1 bg-[#6A4DFF] rounded-md text-[#FFFFFF] text-sm">
-                  4
-                </span>
-              </div>
-            </div>
-            {/* person-4 */}
+            ))}
           </div>
         </div>
       )}

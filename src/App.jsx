@@ -5,7 +5,6 @@ import HomePage from "./pages/Home";
 import RegisterPage from "./pages/Register";
 import LoginPage from "./pages/Login";
 import { queryClient } from "./http";
-import { AuthProvider } from "./context/AuthContext";
 import { checkAuthLoader } from "./auth";
 
 const router = createBrowserRouter([
@@ -33,9 +32,7 @@ const router = createBrowserRouter([
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <RouterProvider router={router} />
-      </AuthProvider>
+      <RouterProvider router={router} />
     </QueryClientProvider>
   );
 }

@@ -3,18 +3,18 @@ import { useState } from "react";
 import { Link, Form, useNavigate } from "react-router-dom";
 import { loginUser } from "../http";
 import Error from "./UI/showError";
-import { useAuth } from "../context/AuthContext";
+import { useChatAppContext } from "../context/ChatAppContext";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login } = useChatAppContext();
 
   const { mutate, isPending, isError, error } = useMutation({
     mutationFn: ({ loginData }) => loginUser(loginData),
     onSuccess: (data) => {
-      login(data.user.username, data.user.avatar, data.token);
+      login(data.user.username, data.user.id, data.user.avatar, data.token);
       navigate("/");
     },
   });

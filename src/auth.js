@@ -36,6 +36,12 @@ export const getAvatar = () => {
   return avatar;
 };
 
+export const getUserId = () => {
+  const Id = localStorage.getItem("userId");
+
+  return Id;
+};
+
 export const checkAuthLoader = () => {
   const token = getAuthToken();
 

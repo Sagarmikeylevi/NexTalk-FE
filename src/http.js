@@ -23,6 +23,7 @@ export const loginUser = async (loginData) => {
     localStorage.setItem("token", token);
     localStorage.setItem("username", user.username);
     localStorage.setItem("avatar", user.avatar);
+    localStorage.setItem("userId", user.id);
 
     const expiration = new Date();
     expiration.setHours(expiration.getHours() + 1);
@@ -32,6 +33,24 @@ export const loginUser = async (loginData) => {
       token,
       user,
     };
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getAllMembers = async (userId) => {
+  try {
+    const response = await axios.get(`${apiURL}/api/user/getUsers`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const users = response.data.data.users;
+
+    const members = users.filter((user) => user.id !== userId);
+
+    return members;
   } catch (error) {
     throw error;
   }

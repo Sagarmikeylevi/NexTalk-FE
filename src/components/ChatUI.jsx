@@ -12,6 +12,7 @@ const ChatUI = ({ members }) => {
     userId: firstPerson,
     updateSecondPerson,
     updateActiveChatId,
+    onlineUsers,
   } = useChatAppContext();
 
   const { mutate, isPending, isError, error } = useMutation({
@@ -67,6 +68,14 @@ const ChatUI = ({ members }) => {
                 key={member.id}
                 onClick={() => chatHandler(member.id, member.username)}
               >
+                {onlineUsers?.some((user) => user?.userId === member.id) && (
+                  <img
+                    src="https://cdn-icons-png.flaticon.com/128/304/304286.png"
+                    alt="online"
+                    className="absolute right-4 top-[10%] translate-y-[-10%] h-4 w-4"
+                  />
+                )}
+
                 <div className="absolute left-4 top-[50%] translate-y-[-50%] flex flex-row space-x-4">
                   <img
                     src={member.avatar}

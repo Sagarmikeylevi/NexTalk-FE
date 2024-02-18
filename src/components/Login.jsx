@@ -9,11 +9,12 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const { login } = useChatAppContext();
+  const { login, updateActiveChatId } = useChatAppContext();
 
   const { mutate, isPending, isError, error } = useMutation({
     mutationFn: ({ loginData }) => loginUser(loginData),
     onSuccess: (data) => {
+      updateActiveChatId(null);
       login(data.user.username, data.user.id, data.user.avatar, data.token);
       navigate("/");
     },

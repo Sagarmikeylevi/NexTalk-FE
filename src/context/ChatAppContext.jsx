@@ -1,5 +1,6 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { getAuthToken, getAvatar, getUserId, getUsername } from "../auth";
+import { io } from "socket.io-client";
 
 const ChatAppContext = createContext();
 
@@ -17,6 +18,52 @@ export const ChatAppContextProvider = ({ children }) => {
   const [members, setMembers] = useState([]);
   const [secondPerson, setSecondPerson] = useState({});
   const [activeChatId, setActiveChatId] = useState(null);
+  const [socket, setSocket] = useState(null);
+  const [onlineUsers, setOnlineUsers] = useState([]);
+  const [messages, setMessages] = useState([]);
+  const [newMessage, setNewMessage] = useState(null);
+
+  useEffect(() => {
+    const newSocket = io("http://localhost:3000");
+    setSocket(newSocket);
+
+    return () => {
+      newSocket.disconnect();
+    };
+  }, [userId]);
+
+  useEffect(() => {
+    if (socket === null) return;
+    socket.emit("addNewUser", userId);
+    socket.on("getOnlineUsers", (res) => {
+      setOnlineUsers(res);
+    });
+
+    return () => {
+      socket.off("getOnlineUsers");
+    };
+  }, [socket, userId]);
+
+  useEffect(() => {
+    if (socket === null) return;
+
+    const secondPersonId = secondPerson.id;
+
+    socket.emit("sendMessage", { ...newMessage, secondPersonId });
+  }, [socket, newMessage]);
+
+  useEffect(() => {
+    if (socket === null) return;
+
+    socket.on("getMessage", (res) => {
+      if (activeChatId !== res.chatId) return;
+      setMessages((prev) => [...prev, res]);
+    });
+
+    return () => {
+      socket.off("getMessage");
+    };
+  }, [socket, activeChatId]);
 
   const updateSideBar = () => {
     setShowSidebar((prevState) => !prevState);
@@ -51,6 +98,14 @@ export const ChatAppContextProvider = ({ children }) => {
     setActiveChatId(chatId);
   };
 
+  const updateMessages = (messages) => {
+    setMessages(messages);
+  };
+
+  const updateNewMessage = (message) => {
+    setNewMessage(message);
+  };
+
   return (
     <ChatAppContext.Provider
       value={{
@@ -68,6 +123,11 @@ export const ChatAppContextProvider = ({ children }) => {
         updateSecondPerson,
         activeChatId,
         updateActiveChatId,
+        onlineUsers,
+        socket,
+        messages,
+        updateMessages,
+        updateNewMessage,
       }}
     >
       {children}

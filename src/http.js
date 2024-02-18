@@ -87,7 +87,7 @@ export const sendChat = async (chatId, senderId, text) => {
       text,
     });
 
-    console.log(response);
+    // console.log(response);
 
     return response.data;
   } catch (error) {

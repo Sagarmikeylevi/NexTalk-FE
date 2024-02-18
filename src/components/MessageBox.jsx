@@ -3,15 +3,22 @@ import { useChatAppContext } from "../context/ChatAppContext";
 import Loader from "./UI/loader";
 import Error from "./UI/showError";
 import { getMessages, sendChat } from "../http";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const MessageBox = () => {
   const [sendMessage, setSendMessage] = useState("");
-  const { showSidebar, secondPerson, activeChatId, userId } =
-    useChatAppContext();
+  const {
+    showSidebar,
+    secondPerson,
+    activeChatId,
+    userId,
+    updateMessages,
+    messages,
+    updateNewMessage,
+  } = useChatAppContext();
 
   const {
-    data: messages,
+    data,
     isPending: isMessagePending,
     isError: isMessageError,
     error: messageError,
@@ -22,12 +29,19 @@ const MessageBox = () => {
     initialData: [],
   });
 
+  useEffect(() => {
+    if (data) {
+      updateMessages(data);
+    }
+  }, [data, messages]);
+
   const { mutate, isPending, isError, error } = useMutation({
     mutationFn: ({ chatId, senderId, text }) =>
       sendChat(chatId, senderId, text),
 
     onSuccess: (data) => {
-      console.log(data);
+      messages.push(data);
+      updateNewMessage(data);
     },
   });
 

@@ -3,11 +3,12 @@ import { useChatAppContext } from "../context/ChatAppContext";
 import Loader from "./UI/loader";
 import Error from "./UI/showError";
 import { getMessages, sendChat } from "../http";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import InputEmoji from "react-input-emoji";
 
 const MessageBox = () => {
   const [sendMessage, setSendMessage] = useState("");
+  const scroll = useRef();
 
   const {
     showSidebar,
@@ -18,6 +19,10 @@ const MessageBox = () => {
     messages,
     updateNewMessage,
   } = useChatAppContext();
+
+  useEffect(() => {
+    scroll.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   const {
     data,
@@ -53,10 +58,6 @@ const MessageBox = () => {
       setSendMessage("");
     }
   };
-
-  if (isPending) {
-    return <Loader message="Sending messages..." />;
-  }
 
   if (isError) {
     console.log(error);
@@ -94,7 +95,11 @@ const MessageBox = () => {
             {messages.map((message) => {
               if (message.senderId === secondPerson.id) {
                 return (
-                  <div className="flex justify-start mb-2" key={message._id}>
+                  <div
+                    className="flex justify-start mb-2"
+                    key={message._id}
+                    ref={scroll}
+                  >
                     <span className="px-4 py-2 bg-[#f2f2f2] w-auto rounded-md">
                       {message.text}
                     </span>
@@ -102,7 +107,11 @@ const MessageBox = () => {
                 );
               } else {
                 return (
-                  <div className="flex justify-end mb-2" key={message._id}>
+                  <div
+                    className="flex justify-end mb-2"
+                    key={message._id}
+                    ref={scroll}
+                  >
                     <span className="px-4 py-2 bg-[#6A4DFF] text-[#FFFFFF] rounded-md">
                       {message.text}
                     </span>
@@ -131,12 +140,23 @@ const MessageBox = () => {
             </div>
 
             <div className="absolute right-4 top-[50%] translate-y-[-50%] flex flex-row space-x-4 items-center">
-              <img
-                src="https://cdn-icons-png.flaticon.com/128/13734/13734068.png"
-                alt="submit"
-                className="w-8 h-8 cursor-pointer"
-                onClick={sendMessageHandler}
-              />
+              {isPending && (
+                <img
+                  src="https://cdn-icons-png.flaticon.com/128/3647/3647339.png"
+                  alt="submit"
+                  className="w-8 h-8 cursor-pointer"
+                  onClick={sendMessageHandler}
+                />
+              )}
+
+              {!isPending && (
+                <img
+                  src="https://cdn-icons-png.flaticon.com/128/13734/13734068.png"
+                  alt="submit"
+                  className="w-8 h-8 cursor-pointer"
+                  onClick={sendMessageHandler}
+                />
+              )}
             </div>
           </div>
         </>

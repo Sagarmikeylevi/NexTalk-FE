@@ -4,6 +4,7 @@ import { createChat } from "../http";
 import Loader from "./UI/loader";
 import Error from "./UI/showError";
 import MessageBox from "./MessageBox";
+import { useState } from "react";
 
 const ChatUI = ({ members }) => {
   const {
@@ -15,6 +16,8 @@ const ChatUI = ({ members }) => {
     onlineUsers,
   } = useChatAppContext();
 
+  const [searchQuery, setSearchQuery] = useState("");
+
   const { mutate, isPending, isError, error } = useMutation({
     mutationFn: ({ firstPerson, secondPerson }) =>
       createChat(firstPerson, secondPerson),
@@ -22,6 +25,10 @@ const ChatUI = ({ members }) => {
       updateActiveChatId(chatId);
     },
   });
+
+  const filteredMembers = members.filter((member) =>
+    member.username.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   const chatHandler = (secondPerson, username) => {
     mutate({ firstPerson, secondPerson });
@@ -51,6 +58,8 @@ const ChatUI = ({ members }) => {
               <input
                 type="text"
                 placeholder="Search"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-[80%] h-full px-4 rounded-md bg-transparent text-thin text-[#0000337a] outline-none tracking-wide"
               />
             </div>
@@ -62,7 +71,7 @@ const ChatUI = ({ members }) => {
             />
           </div>
           <div className="w-full h-[80%] rounded-l-md overflow-hidden hover:overflow-y-auto scrollbar-thin scrollbar-thumb-[#0000337a] scrollbar-track-transparent transition-all duration-300">
-            {members.map((member) => (
+            {filteredMembers.map((member) => (
               <div
                 className="w-full h-[25%]  relative hover:bg-[#f2f2f2] ease-in-out duration-200"
                 key={member.id}

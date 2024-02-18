@@ -3,7 +3,7 @@ import axios from "axios";
 
 export const queryClient = new QueryClient();
 
-export const apiURL = "http://localhost:8000";
+export const apiURL = "https://nextalk-glyz.onrender.com";
 
 export const registerUser = async (userData) => {
   try {

@@ -4,9 +4,11 @@ import Loader from "./UI/loader";
 import Error from "./UI/showError";
 import { getMessages, sendChat } from "../http";
 import { useEffect, useState } from "react";
+import InputEmoji from "react-input-emoji";
 
 const MessageBox = () => {
   const [sendMessage, setSendMessage] = useState("");
+
   const {
     showSidebar,
     secondPerson,
@@ -33,7 +35,7 @@ const MessageBox = () => {
     if (data) {
       updateMessages(data);
     }
-  }, [data, messages]);
+  }, [data]);
 
   const { mutate, isPending, isError, error } = useMutation({
     mutationFn: ({ chatId, senderId, text }) =>
@@ -46,7 +48,10 @@ const MessageBox = () => {
   });
 
   const sendMessageHandler = () => {
-    mutate({ chatId: activeChatId, senderId: userId, text: sendMessage });
+    if (sendMessage.trim().length > 0) {
+      mutate({ chatId: activeChatId, senderId: userId, text: sendMessage });
+      setSendMessage("");
+    }
   };
 
   if (isPending) {
@@ -108,27 +113,24 @@ const MessageBox = () => {
           </div>
 
           <div className="h-[15%] w-full bg-[#e6e6e6] absolute bottom-0 rounded-br-md">
-            <div className="absolute left-4 top-[50%] translate-y-[-50%] w-[70%] flex flex-row space-x-4 items-center">
+            <div className="absolute left-4 top-[50%] translate-y-[-50%] w-[80%] sm-[85%] md:w-[90%] flex flex-row space-x-4 items-center">
               <img
                 src="https://cdn-icons-png.flaticon.com/128/10015/10015412.png"
                 alt="message"
                 className="w-8 h-8 opacity-40"
               />
-              <input
+              <InputEmoji
                 type="text"
                 placeholder="Type here"
-                className="w-full h-full bg-transparent outline-none text-lg text-thin text-[#0000337a]"
-                onChange={(event) => setSendMessage(event.target.value)}
+                value={sendMessage}
+                borderColor="transparent"
+                cleanOnEnter
+                onEnter={sendMessageHandler}
+                onChange={setSendMessage}
               />
             </div>
 
             <div className="absolute right-4 top-[50%] translate-y-[-50%] flex flex-row space-x-4 items-center">
-              <img
-                src="https://cdn-icons-png.flaticon.com/128/1023/1023656.png"
-                alt="emoji"
-                className="w-8 h-8 opacity-40 cursor-pointer"
-              />
-
               <img
                 src="https://cdn-icons-png.flaticon.com/128/13734/13734068.png"
                 alt="submit"

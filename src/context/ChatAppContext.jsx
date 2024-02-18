@@ -42,7 +42,7 @@ export const ChatAppContextProvider = ({ children }) => {
     return () => {
       socket.off("getOnlineUsers");
     };
-  }, [socket, userId]);
+  }, [socket]);
 
   useEffect(() => {
     if (socket === null) return;
@@ -50,13 +50,14 @@ export const ChatAppContextProvider = ({ children }) => {
     const secondPersonId = secondPerson.id;
 
     socket.emit("sendMessage", { ...newMessage, secondPersonId });
-  }, [socket, newMessage]);
+  }, [newMessage]);
 
   useEffect(() => {
     if (socket === null) return;
 
     socket.on("getMessage", (res) => {
       if (activeChatId !== res.chatId) return;
+
       setMessages((prev) => [...prev, res]);
     });
 

@@ -24,7 +24,7 @@ export const ChatAppContextProvider = ({ children }) => {
   const [newMessage, setNewMessage] = useState(null);
 
   useEffect(() => {
-    const newSocket = io("https://nex-talk-socket.vercel.app");
+    const newSocket = io("https://nextalk-socket.onrender.com/");
     setSocket(newSocket);
 
     return () => {
